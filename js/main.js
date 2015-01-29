@@ -16,17 +16,12 @@
     this.weeks = [];
   }
 
-  SchoolMonth.prototype.getOffset = function(){
-    for (var i in this.weeks) {
-      for (var j in this.weeks[i].days){
-        var day = this.weeks[i].days[j].date.getUTCDay();
-        if (day === 0) {
-          day = 7;
-        }
-        return day;
-      }
+  SchoolDay.prototype.getOffset = function(){
+    var day = this.date.getUTCDay();
+    if (day === 0) {
+      day = 7;
     }
-    return null;
+    return day;
   }
 
   SchoolMonth.prototype.getNumber = function(){
@@ -67,7 +62,7 @@
   function Calendar(year, calendar){
     this.startYear = parseInt(year);
     this.calendar = calendar;
-    this.months = [];
+    this.weeks = [];
   }
 
 
@@ -77,34 +72,21 @@
     var stop = new Date(this.startYear+1, 6, 31, 12);
     // Loop months
     while (now <= stop){
-      var month = new SchoolMonth();
-      var monthNum = now.getUTCMonth();
-      // Loop weeks in month
-      while (monthNum == now.getUTCMonth()) {
-        var week = new SchoolWeek()
-        while (true) {
-          if (now.getUTCDay() == 0) {
-            now = this.addDay(now);
-          }
-          if (now.getUTCMonth() != monthNum) {
-            break;
-          }
-          if (now.getUTCDay() <= 5) {
-            var day = new SchoolDay(now);
-            week.days.push(day);
-            now = this.addDay(now)
-          } else {
-            break;
-          }
+      var week = new SchoolWeek()
+      while (true) {
+        if (now.getUTCDay() == 0) {
+          now = this.addDay(now);
         }
-        if (now.getUTCMonth() != monthNum) {
+        if (now.getUTCDay() <= 5) {
+          var day = new SchoolDay(now);
+          week.days.push(day);
+          now = this.addDay(now)
+        } else {
           break;
         }
-        month.weeks.push(week);
-        now = this.addDay(now, 2);
       }
-      this.months.push(month);
-      console.log(now)
+      this.weeks.push(week);
+      now = this.addDay(now, 2);
     }
 
   }
@@ -116,27 +98,33 @@
 
   Calendar.prototype.render = function(){
     var tbodyStr = "";
-    for (var i in this.months) {
-      var month = this.months[i];
-      var monthOffset = month.getOffset();
-      tbodyStr += "<tr><th>"+ printMonth(month.getNumber()) +"</th></tr>"
-      for (var j in month.weeks) {
-        var week = month.weeks[j];
-        var weekRow = "<tr><td>" + ((j%2 == 0)?("A"):("B")) + "</td>";
-        if (monthOffset) {
-          for (var i = 1; i < monthOffset; i++) {
+    var month = 6;
+
+    for (var j in this.weeks) {
+      var week = this.weeks[j];
+      var weekRow = "";
+      if (week.days[0].date.getUTCMonth() === month) {
+        weekRow = "<tr><td>" + ((j%2 == 0)?("A"):("B")) + "</td>";
+
+      }
+
+
+      for (var k in week.days) {
+        var day = week.days[k];
+        if (day.date.getUTCMonth() !== month) { // new month
+          month = day.date.getUTCMonth();
+          weekRow += "</tr><tr><th>" + printMonth(month) + "</th>"
+          var offset = day.getOffset();
+          for (var i=1; i< offset; i++){
             weekRow += "<td></td>";
           }
-          monthOffset = 0;
         }
-        for (var k in week.days) {
-          var day = week.days[k];
-          weekRow += ("<td><div>" + day.date.getDate() + "</div></td>");
-        }
-        weekRow += "</tr>";
-        tbodyStr += weekRow;
+        weekRow += ("<td><div>" + day.date.getDate() + "</div></td>");
       }
+      weekRow += "</tr>";
+      tbodyStr += weekRow;
     }
+
     $(this.calendar).html(tbodyStr);
   }
 
