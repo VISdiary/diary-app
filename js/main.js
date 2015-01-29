@@ -1,6 +1,6 @@
 (function($){
   function Calendar(year){
-    this.startYear = year
+    this.startYear = year;
   }
 
   Calendar.prototype.populate = function(){
@@ -12,9 +12,12 @@
     $(".yearSelect").on("change", function(){
       console.log($(this).val());
     });
+
+    var calendar = $(".calendar");
+
+
+
+
   });
-
-
-
 
 })($);
