@@ -1,5 +1,6 @@
 (function($){
 
+  // Pretty print month name
   function printMonth(month) {
     var m_names = new Array("January", "February", "March",
 "April", "May", "June", "July", "August", "September",
@@ -7,32 +8,12 @@
     return m_names[month]
   }
 
-
+  // Dom events are handled here
   function EventHandler(cal) {
     this.Cal = cal; // Calendar object
   }
 
-  function SchoolMonth(){
-    this.weeks = [];
-  }
-
-  SchoolDay.prototype.getOffset = function(){
-    var day = this.date.getUTCDay();
-    if (day === 0) {
-      day = 7;
-    }
-    return day;
-  }
-
-  SchoolMonth.prototype.getNumber = function(){
-    for (var i in this.weeks) {
-      for (var j in this.weeks[i].days){
-        return this.weeks[i].days[j].date.getUTCMonth();
-      }
-    }
-    return null;
-  }
-
+  // Holds school weeks
   function SchoolWeek(letter) {
     this.letter = letter || ""; // A|B
     this.days = [];
@@ -49,23 +30,34 @@
     return true;
   }
 
+  // Holds individual school days
   function SchoolDay(date){
     this.date = date;
     this.holiday = false;
     this.information = [];
   }
-
+  // Is this day a holiday
   SchoolDay.prototype.isHoliday = function(){
     return this.holiday;
   }
 
+  // get offset from Saturday; Mon -> 1 Tue -> 2 etc...
+  SchoolDay.prototype.getOffset = function(){
+    var day = this.date.getUTCDay();
+    if (day === 0) {
+      day = 7;
+    }
+    return day;
+  }
+
+  // Holds the calendar
   function Calendar(year, calendar){
     this.startYear = parseInt(year);
     this.calendar = calendar;
     this.weeks = [];
   }
 
-
+  // Populate calendar with dates
   Calendar.prototype.populate = function(){
     var start = new Date(this.startYear, 7, 1, 12);
     var now = start;
@@ -91,11 +83,13 @@
 
   }
 
+  // TODO this should go into a date prototype
   Calendar.prototype.addDay = function(date, num){
     num = num || 1;
     return new Date(date - (-1000*60*60*24 * num)); // Add 1 day
   }
 
+  // Render the calendar table
   Calendar.prototype.render = function(){
     var tbodyStr = "";
     var month = 6;
