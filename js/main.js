@@ -1,4 +1,13 @@
 (function($){
+
+  function printMonth(month) {
+    var m_names = new Array("January", "February", "March",
+"April", "May", "June", "July", "August", "September",
+"October", "November", "December");
+    return m_names[month]
+  }
+
+
   function EventHandler(cal) {
     this.Cal = cal; // Calendar object
   }
@@ -8,21 +17,24 @@
   }
 
   SchoolMonth.prototype.getOffset = function(){
-    if (this.weeks[0] && this.weeks[0].days[0]) {
-      var day = this.weeks[0].days[0].date.getUTCDay();
-      if (day === 0) {
-        day = 7;
+    for (var i in this.weeks) {
+      for (var j in this.weeks[i].days){
+        var day = this.weeks[i].days[j].date.getUTCDay();
+        if (day === 0) {
+          day = 7;
+        }
+        return day;
       }
-      return day;
     }
     return null;
   }
 
   SchoolMonth.prototype.getNumber = function(){
-    if (this.weeks[0] && this.weeks[0].days[0]) {
-      return this.weeks[0].days[0].date.getUTCMonth();
+    for (var i in this.weeks) {
+      for (var j in this.weeks[i].days){
+        return this.weeks[i].days[j].date.getUTCMonth();
+      }
     }
-    console.log(this)
     return null;
   }
 
@@ -42,9 +54,6 @@
     return true;
   }
 
-
-
-
   function SchoolDay(date){
     this.date = date;
     this.holiday = false;
@@ -63,21 +72,19 @@
 
 
   Calendar.prototype.populate = function(){
-    var start = new Date(this.startYear, 7, 1);
+    var start = new Date(this.startYear, 7, 1, 12);
     var now = start;
-    var stop = new Date(this.startYear+1, 6, 31);
+    var stop = new Date(this.startYear+1, 6, 31, 12);
     // Loop months
     while (now <= stop){
-      var month = new SchoolMonth(now);
+      var month = new SchoolMonth();
       var monthNum = now.getUTCMonth();
-      // Loop days in month
+      // Loop weeks in month
       while (monthNum == now.getUTCMonth()) {
         var week = new SchoolWeek()
         while (true) {
-          console.log(now.getUTCDay())
           if (now.getUTCDay() == 0) {
             now = this.addDay(now);
-            continue;
           }
           if (now.getUTCMonth() != monthNum) {
             break;
@@ -90,6 +97,9 @@
             break;
           }
         }
+        if (now.getUTCMonth() != monthNum) {
+          break;
+        }
         month.weeks.push(week);
         now = this.addDay(now, 2);
       }
@@ -100,7 +110,7 @@
   }
 
   Calendar.prototype.addDay = function(date, num){
-    num = num || 1
+    num = num || 1;
     return new Date(date - (-1000*60*60*24 * num)); // Add 1 day
   }
 
@@ -109,7 +119,7 @@
     for (var i in this.months) {
       var month = this.months[i];
       var monthOffset = month.getOffset();
-      tbodyStr += "<tr><th>"+ month.getNumber() +"</th></tr>"
+      tbodyStr += "<tr><th>"+ printMonth(month.getNumber()) +"</th></tr>"
       for (var j in month.weeks) {
         var week = month.weeks[j];
         var weekRow = "<tr><td>" + ((j%2 == 0)?("A"):("B")) + "</td>";
@@ -121,7 +131,7 @@
         }
         for (var k in week.days) {
           var day = week.days[k];
-          weekRow += ("<td><div>" + day.date + "</div></td>");
+          weekRow += ("<td><div>" + day.date.getDate() + "</div></td>");
         }
         weekRow += "</tr>";
         tbodyStr += weekRow;
