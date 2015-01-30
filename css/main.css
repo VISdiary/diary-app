@@ -1,3 +1,14 @@
-.calendar .row div {
+.calendar tr td div {
 
+  background: #eee;
+  padding: 5px;
+  text-align: center;
+  font-style: italic;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+.calendar tr td div.holiday {
+  background: #5B9CE5;
 }
