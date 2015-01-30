@@ -9,8 +9,27 @@
   }
 
   // Dom events are handled here
-  function EventHandler(cal) {
-    this.Cal = cal; // Calendar object
+  function EventHandler() {
+    var self = this;
+    this.Cal = new Calendar($(".yearSelect").val(), ".calendar"); // Calendar object
+    this.Cal.populate();
+    this.Cal.render();
+
+    $(".yearSelect").on("change", function(){
+      self.Cal.updateYear($(this).val());
+      self.Cal.render();
+      self.refresh();
+    });
+
+    this.refresh();
+  }
+
+  EventHandler.prototype.refresh = function(){
+    var self = this;
+    $(".calendar tr td div");
+    $(".calendar tr td div").click(function(){
+      self.Cal.toggleHoliday($(this).attr("week"), $(this).attr("day"), this);
+    });
   }
 
   // Holds school weeks
@@ -53,6 +72,7 @@
   // Holds the calendar
   function Calendar(year, calendar){
     this.startYear = parseInt(year);
+    console.log(this.startYear)
     this.calendar = calendar;
     this.weeks = [];
   }
@@ -62,6 +82,8 @@
     var start = new Date(this.startYear, 7, 1, 12);
     var now = start;
     var stop = new Date(this.startYear+1, 6, 31, 12);
+    this.weeks = [];
+
     // Loop months
     while (now <= stop){
       var week = new SchoolWeek()
@@ -81,6 +103,11 @@
       now = this.addDay(now, 2);
     }
 
+  }
+
+  Calendar.prototype.updateYear = function(year){
+    this.startYear = year;
+    this.populate();
   }
 
   // TODO this should go into a date prototype
@@ -113,7 +140,7 @@
             weekRow += "<td></td>";
           }
         }
-        weekRow += ("<td><div>" + day.date.getDate() + "</div></td>");
+        weekRow += ("<td><div class='" + ((day.holiday)?("holiday "):(" ")) + "' week='" + j + "' day='" + k + "'' >" + day.date.getDate() + "</div></td>");
       }
       weekRow += "</tr>";
       tbodyStr += weekRow;
@@ -122,16 +149,18 @@
     $(this.calendar).html(tbodyStr);
   }
 
+  Calendar.prototype.toggleHoliday = function(week, day, element){
+    console.log(week, day)
+    this.weeks[week].days[day].holiday = ! this.weeks[week].days[day].holiday;
+    $(element).toggleClass("holiday")
+  }
+
 
 
   $(document).ready(function(){
-    window.Cal = new Calendar("2014", ".calendar");
-    window.Cal.populate()
-    window.Cal.render();
+    window.Ev = new EventHandler()
 
-    $(".yearSelect").on("change", function(){
-      console.log($(this).val());
-    });
+
 
 
 
