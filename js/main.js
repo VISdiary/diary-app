@@ -11,6 +11,18 @@
   // Dom events are handled here
   function EventHandler() {
     var self = this;
+
+    $( "#dateStart" ).pickadate().pickadate("on", {
+      set: function(thing){
+        self.setStartDate(new Date(thing.select))
+      }
+    }).set("disable", [{from: [2014,08,1], to: [2015, 07,30]}]);
+    $( "#dateEnd" ).pickadate().pickadate("on", {
+      set: function(thing){
+        self.setEndDate(new Date(thing.select))
+      }
+    });
+
     this.Cal = new Calendar($(".yearSelect").val(), ".calendar"); // Calendar object
     this.Cal.populate();
     this.Cal.render();
@@ -30,6 +42,14 @@
     $(".calendar tr td div").click(function(){
       self.Cal.toggleHoliday($(this).attr("week"), $(this).attr("day"), this);
     });
+  }
+
+  EventHandler.prototype.setStartDate = function(date){
+
+  }
+
+  EventHandler.prototype.setEndDate = function(date){
+
   }
 
   // Holds school weeks

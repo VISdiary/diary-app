@@ -5,7 +5,11 @@
   <title>Diary Generator</title>
   <link rel="stylesheet" href='css/main.css' />
   <link rel="stylesheet" href='css/modules/bootstrap/dist/css/bootstrap.min.css' />
+  <link rel="stylesheet" href='css/modules/pickadate/lib/themes/classic.css' />
+  <link rel="stylesheet" href='css/modules/pickadate/lib/themes/classic.date.css' />
   <script src="css/modules/jquery/dist/jquery.min.js"> </script>
+  <script src="css/modules/pickadate/lib/compressed/picker.js"> </script>
+  <script src="css/modules/pickadate/lib/compressed/picker.date.js"> </script>
   <script src="css/modules/bootstrap/dist/js/bootstrap.min.js"> </script>
   <script src="js/main.js"> </script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -22,6 +26,16 @@
           <option value="2016">2016/17</option>
           <option value="2017">2017/18</option>
         </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <label for="dateStart">Start of school</label>
+        <input class="form-control" type="text" id="dateStart">
+      </div>
+      <div class="col-md-6">
+        <label for="dateStart">End of school</label>
+        <input class="form-control" type="text" id="dateEnd">
       </div>
     </div>
     <div class="row">
