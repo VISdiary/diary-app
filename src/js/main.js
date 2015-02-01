@@ -13,16 +13,21 @@
     return m_names[month];
   };
 
+  Utils.addDay = function(date, num) {
+    num = num || 1;
+    return new Date(date - (-1000 * 60 * 60 * 24 * num)); // Add 1 day
+  };
+
   // Dom events are handled here
   function EventHandler() {
     var self = this;
 
     this.progress = {
       element: $(".progress-top"),
-      stage: 3
+      stage: 0
     };
 
-    this.Cal = new Calendar(2000);
+    this.Cal = new Calendar(2013);
 
     this.setupProgress();
     this.setupYearPicker();
@@ -36,10 +41,38 @@
     // In case user clicks a stage to go back
     this.progress.element.children("ul").children("li").click(function() {
       var index = $(this).index();
-      //if (index <= self.progress.stage) {
-      self.changeToStage(index);
-      //}
+      if (index <= self.progress.stage) {
+        self.changeToStage(index);
+      }
     });
+
+    $(".stage .next").click(function() {
+      var index = $(".stage .next").index(this);
+
+      if (self.checkStage(index)) {
+        self.changeToStage(++index);
+      } else {
+
+      }
+    });
+    $(".stage .back").click(function() {
+      var index = $(".stage .back").index(this);
+
+
+      self.changeToStage(index); // index is -1 based
+    });
+  };
+  EventHandler.prototype.checkStage = function(index) {
+    switch (index) {
+      case 0:
+        return true;
+      case 1:
+        return true;
+      case 2:
+        return true;
+      default:
+        return false;
+    }
   };
 
   EventHandler.prototype.changeToStage = function(i) {
@@ -59,22 +92,34 @@
   EventHandler.prototype.setupYearPicker = function() {
     var self = this;
     $(".yearSelect").on("change", function() {
-      self.Cal.updateYear($(this).val());
-      self.Cal.render();
+      self.Cal.setYear($(this).val())
+        .render();
       self.refresh();
     });
   };
   EventHandler.prototype.setupDatePicker = function() {
     var self = this;
-    $("#dateStart").pickadate().pickadate("on", {
+    var year = this.Cal.getYear();
+
+    var opts = {
+      firstDay: 1,
+      min: new Date(year, 7, 1),
+      max: new Date(year + 1, 6, 31),
+      disable: [6, 7]
+
+    };
+    var dateStart = $("#dateStart").pickadate();
+    var dateEnd = $("#dateEnd").pickadate();
+
+    dateStart.pickadate("set", opts);
+    dateEnd.pickadate("set", opts);
+
+    dateStart.pickadate("on", {
       set: function(thing) {
         self.setStartDate(new Date(thing.select));
       }
-    }).set("disable", [{
-      from: [2014, 08, 1],
-      to: [2015, 07, 30]
-    }]);
-    $("#dateEnd").pickadate().pickadate("on", {
+    });
+    dateEnd.pickadate("on", {
       set: function(thing) {
         self.setEndDate(new Date(thing.select));
       }
@@ -137,7 +182,6 @@
   // Holds the calendar
   function Calendar(year) {
     this.startYear = parseInt(year);
-    console.log(this.startYear);
     this.calendar = ".calendar";
     this.weeks = [];
   }
@@ -148,39 +192,39 @@
     var now = start;
     var stop = new Date(this.startYear + 1, 6, 31, 12);
     this.weeks = [];
-    console.log(start, stop)
-      // Loop months
+    // Loop months
     while (now <= stop) {
       var week = new SchoolWeek();
       while (true) {
         if (now.getUTCDay() === 0) {
-          now = this.addDay(now);
+          now = Utils.addDay(now);
         }
         if (now.getUTCDay() <= 5) {
           var day = new SchoolDay(now);
           week.days.push(day);
-          now = this.addDay(now);
+          now = Utils.addDay(now);
         } else {
           break;
         }
       }
+
+      // If the week is empthy discard it
       if (week.days.length > 0) {
         this.weeks.push(week);
       }
-      now = this.addDay(now, 2);
+      now = Utils.addDay(now, 2);
     }
-
+    return this;
   };
 
-  Calendar.prototype.updateYear = function(year) {
+  Calendar.prototype.setYear = function(year) {
     this.startYear = parseInt(year);
     this.populate();
+    return this;
   };
 
-  // TODO this should go into a date prototype
-  Calendar.prototype.addDay = function(date, num) {
-    num = num || 1;
-    return new Date(date - (-1000 * 60 * 60 * 24 * num)); // Add 1 day
+  Calendar.prototype.getYear = function(year) {
+    return this.startYear;
   };
 
   // Render the calendar table
@@ -192,7 +236,6 @@
     for (var j in this.weeks) {
       var week = this.weeks[j];
       var weekRow = "";
-      console.log(j);
       if (week.days[0].date.getUTCMonth() === month) {
         weekRow = "<tr><td>" + ((j % 2 === 0) ? ("A") : ("B")) + "</td>";
 
@@ -216,12 +259,13 @@
     }
 
     $(this.calendar).html(tbodyStr);
+    return this;
   };
 
   Calendar.prototype.toggleHoliday = function(week, day, element) {
-    console.log(week, day);
     this.weeks[week].days[day].holiday = !this.weeks[week].days[day].holiday;
     $(element).toggleClass("holiday");
+    return this;
   };
 
 

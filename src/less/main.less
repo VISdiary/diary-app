@@ -9,6 +9,10 @@
     font-family: 'Glyphicons Halflings';
     content: " \e013";
     line-height: 40px;
+
+  }
+  &:hover {
+    background: darken(@stage-complete, 5%);
   }
 
 }
@@ -21,8 +25,27 @@
   }
 
 }
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+
+}
 .current-progress {
   animation: progress-positoin 1.5s ease infinite alternate;
+
+  span:after {
+    animation: rotation 3s linear infinite;
+    transform-origin: 50% 49%;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    content: "\e031";
+    line-height: 40px;
+    margin-left: 10px;
+  }
 
 }
 .progress-top {
@@ -151,7 +174,11 @@
 
   }
   .beginning {
-    
+    #dateStart,
+    #dateEnd {
+      background-color: white;
+      cursor: pointer;
+    }
 
   }
   .dates {

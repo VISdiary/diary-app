@@ -38,6 +38,9 @@ html
               option(value='2015') 2015/16
               option(value='2016') 2016/17
               option(value='2017') 2017/18
+        .row
+          .col-md-1.col-md-offset-11
+            button.btn.btn-lg.btn-success.next(type="button") Next
       .row.stage.beginning
         .title 
           h2 2. Select Beginning and End
@@ -46,11 +49,15 @@ html
         .row
           .col-md-6
             label(for='dateStart') Start of school
-            input#dateStart.form-control(type='text')
+            input#dateStart.form-control(type='text' placeholder="Date the school starts")
           .col-md-6
             label(for='dateStart') End of school
-            input#dateEnd.form-control(type='text')
-      
+            input#dateEnd.form-control(type='text' placeholder="Date the school ends")
+        .row
+          .col-md-1
+            button.btn.btn-lg.btn-warning.back(type="button") Next
+          .col-md-1.col-md-offset-10
+            button.btn.btn-lg.btn-success.next(type="button") Back
       .row.stage.dates
         .title 
           h2 3. Select Holidays, Week types and Quotes
@@ -79,6 +86,11 @@ html
                     td
                     td
                     td
+        .row
+          .col-md-1
+            button.btn.btn-lg.btn-warning.back(type="button") Back
+          .col-md-1.col-md-offset-10
+            button.btn.btn-lg.btn-success.next(type="button") Finish
 
     script(src='modules/jquery/dist/jquery.min.js')
     script(src='modules/pickadate/lib/compressed/picker.js')
