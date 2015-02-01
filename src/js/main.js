@@ -21,9 +21,51 @@
       element: $(".progress-top"),
       stage: 3
     };
+
+    this.Cal = new Calendar(2000);
+
     this.setupProgress();
+    this.setupYearPicker();
+    this.setupDatePicker();
+    this.setupCalendar();
 
+  }
 
+  EventHandler.prototype.setupProgress = function() {
+    var self = this;
+    // In case user clicks a stage to go back
+    this.progress.element.children("ul").children("li").click(function() {
+      var index = $(this).index();
+      //if (index <= self.progress.stage) {
+      self.changeToStage(index);
+      //}
+    });
+  };
+
+  EventHandler.prototype.changeToStage = function(i) {
+    // There are only 3 stages plus end
+    if (i < 0 || i > 3) {
+      return null;
+    }
+    this.progress.stage = i;
+    this.progress.element.removeClass("complete-0 complete-1 complete-2 complete-3");
+    this.progress.element.addClass("complete-" + i);
+
+    $("#main").children().removeClass("visible");
+    $("#main").children("div:nth-child(" + (i + 1) + ")").addClass("visible");
+
+  };
+
+  EventHandler.prototype.setupYearPicker = function() {
+    var self = this;
+    $(".yearSelect").on("change", function() {
+      self.Cal.updateYear($(this).val());
+      self.Cal.render();
+      self.refresh();
+    });
+  };
+  EventHandler.prototype.setupDatePicker = function() {
+    var self = this;
     $("#dateStart").pickadate().pickadate("on", {
       set: function(thing) {
         self.setStartDate(new Date(thing.select));
@@ -37,48 +79,14 @@
         self.setEndDate(new Date(thing.select));
       }
     });
-
-    this.Cal = new Calendar($(".yearSelect").val(), ".calendar"); // Calendar object
-    this.Cal.populate();
-    this.Cal.render();
-
-    $(".yearSelect").on("change", function() {
-      self.Cal.updateYear($(this).val());
-      self.Cal.render();
-      self.refresh();
-    });
-
-    this.refresh();
-  }
-  EventHandler.prototype.setupProgress = function() {
-    var self = this;
-    // In case user clicks a stage to go back
-    this.progress.element.children("ul").children("li").click(function() {
-      var index = $(this).index();
-      if (index <= self.progress.stage) {
-        self.changeToStage(index);
-      }
-    });
   };
-
-  EventHandler.prototype.changeToStage = function(i) {
-    // There are only 3 stages plus end
-    if (i < 0 || i > 3) {
-      return null;
-    }
-    this.progress.stage = i;
-    console.log
-    this.progress.element.removeClass("complete-0 complete-1 complete-2 complete-3");
-    this.progress.element.addClass("complete-" + i);
+  EventHandler.prototype.setupCalendar = function() {
 
   };
 
   EventHandler.prototype.refresh = function() {
-    var self = this;
-    $(".calendar tr td div");
-    $(".calendar tr td div").click(function() {
-      self.Cal.toggleHoliday($(this).attr("week"), $(this).attr("day"), this);
-    });
+    this.setupDatePicker();
+    this.setupCalendar();
   };
 
   EventHandler.prototype.setStartDate = function(date) {
@@ -127,10 +135,10 @@
   };
 
   // Holds the calendar
-  function Calendar(year, calendar) {
+  function Calendar(year) {
     this.startYear = parseInt(year);
     console.log(this.startYear);
-    this.calendar = calendar;
+    this.calendar = ".calendar";
     this.weeks = [];
   }
 
@@ -140,8 +148,8 @@
     var now = start;
     var stop = new Date(this.startYear + 1, 6, 31, 12);
     this.weeks = [];
-
-    // Loop months
+    console.log(start, stop)
+      // Loop months
     while (now <= stop) {
       var week = new SchoolWeek();
       while (true) {
@@ -156,14 +164,16 @@
           break;
         }
       }
-      this.weeks.push(week);
+      if (week.days.length > 0) {
+        this.weeks.push(week);
+      }
       now = this.addDay(now, 2);
     }
 
   };
 
   Calendar.prototype.updateYear = function(year) {
-    this.startYear = year;
+    this.startYear = parseInt(year);
     this.populate();
   };
 
@@ -177,10 +187,12 @@
   Calendar.prototype.render = function() {
     var tbodyStr = "";
     var month = 6;
+    $(this.calendar).html("");
 
     for (var j in this.weeks) {
       var week = this.weeks[j];
       var weekRow = "";
+      console.log(j);
       if (week.days[0].date.getUTCMonth() === month) {
         weekRow = "<tr><td>" + ((j % 2 === 0) ? ("A") : ("B")) + "</td>";
 
