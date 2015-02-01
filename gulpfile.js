@@ -19,16 +19,16 @@ var paths = {
     img: ['src/img/**/*.png', 'src/img/**/*.jpg', 'src/img/**/*.gif', 'src/img/**/*.jpeg']
   },
   dest: {
-    js: "build/js",
-    less: "build/css",
-    jade: "build",
-    img: "build/img"
+    js: "public/js",
+    less: "public/css",
+    jade: "public",
+    img: "public/img"
   }
 };
 
 gulp.task('connect', function() {
   connect.server({
-    root: 'build',
+    root: 'public',
     livereload: true
   });
 });
