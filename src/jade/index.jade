@@ -1,0 +1,58 @@
+doctype html
+html
+  head
+    title Diary Generator
+     
+    link(rel='stylesheet', href='css/main.css')
+    link(rel='stylesheet', href='css/modules/bootstrap/dist/css/bootstrap.min.css')
+    link(rel='stylesheet', href='css/modules/pickadate/lib/themes/classic.css')
+    link(rel='stylesheet', href='css/modules/pickadate/lib/themes/classic.date.css')
+  
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+  body
+    .container
+      h1  Generate Diary
+      .row
+        .col-md-3
+          select.yearSelect.form-control
+            option(value='2013') 2013/14
+            option(value='2014') 2014/15
+            option(value='2015') 2015/16
+            option(value='2016') 2016/17
+            option(value='2017') 2017/18
+      .row
+        .col-md-6
+          label(for='dateStart') Start of school
+          input#dateStart.form-control(type='text')
+        .col-md-6
+          label(for='dateStart') End of school
+          input#dateEnd.form-control(type='text')
+      .row
+        .col-md-6
+          h2 Calendar
+      .row
+        .col-md-8.col-md-offset-2
+          .table-responsive
+            table.table.table-hover
+              thead
+                tr
+                  th  Week
+                  th  Mon
+                  th  Tue
+                  th  Wed
+                  th  Thu
+                  th  Fri
+              tbody.calendar
+                tr
+                  td
+                  td
+                  td
+                  td
+                  td
+                  td
+
+    script(src='css/modules/jquery/dist/jquery.min.js')
+    script(src='css/modules/pickadate/lib/compressed/picker.js')
+    script(src='css/modules/pickadate/lib/compressed/picker.date.js')
+    script(src='css/modules/bootstrap/dist/js/bootstrap.min.js')
+    script(src='js/main.js')
