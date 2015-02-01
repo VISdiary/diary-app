@@ -26,6 +26,10 @@
       element: $(".progress-top"),
       stage: 0
     };
+    this.dates = {
+      start: new Date(),
+      end: new Date()
+    };
 
     this.Cal = new Calendar(2013);
 
@@ -59,15 +63,22 @@
       var index = $(".stage .back").index(this);
 
 
-      self.changeToStage(index); // index is -1 based
+      self.changeToStage(index); // index is -1 based (first stage has no back button)
     });
   };
+
   EventHandler.prototype.checkStage = function(index) {
     switch (index) {
       case 0:
         return true;
       case 1:
-        return true;
+        var year = this.Cal.getYear();
+        if (this.dates.start < this.dates.end &&
+          this.dates.start.getFullYear() === year &&
+          this.dates.end.getFullYear() == year + 1) {
+          return true;
+        }
+        return false;
       case 2:
         return true;
       default:
@@ -97,6 +108,7 @@
       self.refresh();
     });
   };
+
   EventHandler.prototype.setupDatePicker = function() {
     var self = this;
     var year = this.Cal.getYear();
@@ -135,11 +147,11 @@
   };
 
   EventHandler.prototype.setStartDate = function(date) {
-
+    this.dates.start = date;
   };
 
   EventHandler.prototype.setEndDate = function(date) {
-
+    this.dates.end = date;
   };
 
   // Holds school weeks
