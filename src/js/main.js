@@ -1,16 +1,28 @@
 (function($) {
 
+  // Utils wrapper
+  function Utils() {
+
+  }
+
   // Pretty print month name
-  function printMonth(month) {
+  Utils.printMonth = function(month) {
     var m_names = new Array("January", "February", "March",
       "April", "May", "June", "July", "August", "September",
       "October", "November", "December");
     return m_names[month];
-  }
+  };
 
   // Dom events are handled here
   function EventHandler() {
     var self = this;
+
+    this.progress = {
+      element: $(".progress-top"),
+      stage: 2
+    };
+    this.setupProgress();
+
 
     $("#dateStart").pickadate().pickadate("on", {
       set: function(thing) {
@@ -38,6 +50,28 @@
 
     this.refresh();
   }
+  EventHandler.prototype.setupProgress = function() {
+    var self = this;
+    // In case user clicks a stage to go back
+    this.progress.element.children("ul").children("li").click(function() {
+      var index = $(this).index();
+      if (index <= self.progress.stage) {
+        self.changeToStage(index);
+      }
+    });
+  };
+
+  EventHandler.prototype.changeToStage = function(i) {
+    // There are only 3 stages
+    if (i < 0 || i > 2) {
+      return null;
+    }
+    this.progress.stage = i;
+    console.log
+    this.progress.element.removeClass("complete-0 complete-1 complete-2 complete-3");
+    this.progress.element.addClass("complete-" + (i + 1));
+
+  };
 
   EventHandler.prototype.refresh = function() {
     var self = this;
@@ -157,7 +191,7 @@
         var day = week.days[k];
         if (day.date.getUTCMonth() !== month) { // new month
           month = day.date.getUTCMonth();
-          weekRow += "</tr><tr><th>" + printMonth(month) + "</th>";
+          weekRow += "</tr><tr><th>" + Utils.printMonth(month) + "</th>";
           var offset = day.getOffset();
           for (var i = 1; i < offset; i++) {
             weekRow += "<td></td>";
@@ -181,7 +215,7 @@
 
 
   $(document).ready(function() {
-    window.Ev = new EventHandler();
+    window.eh = new EventHandler();
   });
 
 })($);

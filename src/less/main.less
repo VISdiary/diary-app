@@ -1,3 +1,8 @@
+.completed-progress {
+  background: rgba(44, 153, 66, 0.89);
+  cursor: pointer;
+
+}
 .progress-top {
   height: 40px;
   width: 100%;
@@ -52,7 +57,7 @@
       width: 33.5%;
     }
     ul li:nth-child(-n+1) div {
-      background: rgba(44, 153, 66, 0.89);
+      .completed-progress();
     }
 
   }
@@ -61,7 +66,7 @@
       width: 66.8%;
     }
     ul li:nth-child(-n+2) div {
-      background: rgba(44, 153, 66, 0.89);
+      .completed-progress();
     }
 
   }
@@ -70,7 +75,7 @@
       width: 100%;
     }
     ul li:nth-child(-n+3) div {
-      background: rgba(44, 153, 66, 0.89);
+      .completed-progress();
     }
   }
 
@@ -90,6 +95,19 @@
     opacity: 0;
     &.visible {
       opacity: 1;
+
+    }
+    .title {
+      text-align: center;
+      h2 {
+        font-size: 40px;
+
+      }
+      p {
+        font-size: 18px;
+
+      }
+      margin-bottom: 20px;
     }
 
   }
