@@ -19,7 +19,7 @@
 
     this.progress = {
       element: $(".progress-top"),
-      stage: 2
+      stage: 3
     };
     this.setupProgress();
 
@@ -62,14 +62,14 @@
   };
 
   EventHandler.prototype.changeToStage = function(i) {
-    // There are only 3 stages
-    if (i < 0 || i > 2) {
+    // There are only 3 stages plus end
+    if (i < 0 || i > 3) {
       return null;
     }
     this.progress.stage = i;
     console.log
     this.progress.element.removeClass("complete-0 complete-1 complete-2 complete-3");
-    this.progress.element.addClass("complete-" + (i + 1));
+    this.progress.element.addClass("complete-" + i);
 
   };
 

@@ -1,6 +1,28 @@
+@stage-complete: rgba(44, 153, 66, 0.89);
+@stage-incomplete: rgba(151, 184, 85, 0.89);
+@stage-change-time: 0.3s;
+
 .completed-progress {
-  background: rgba(44, 153, 66, 0.89);
+  background: @stage-complete;
   cursor: pointer;
+  span:after {
+    font-family: 'Glyphicons Halflings';
+    content: " \e013";
+    line-height: 40px;
+  }
+
+}
+@keyframes progress-positoin {
+  from {
+    background: @stage-complete;
+  }
+  to {
+    background: @stage-incomplete;
+  }
+
+}
+.current-progress {
+  animation: progress-positoin 1.5s ease infinite alternate;
 
 }
 .progress-top {
@@ -20,8 +42,8 @@
         border-left: 2px solid rgba(0, 0, 0, 0.30);
         height: 100%;
         text-align: center;
-        transition: background 0.2s;
-        background: rgba(151, 184, 85, 0.89);
+        transition: background @stage-change-time ease;
+        background: @stage-incomplete;
         span {
           font-weight: bold;
           text-shadow: 0 0 20px rgba(0,0,0,0.5);
@@ -47,8 +69,14 @@
       position: absolute;
       background: rgb(42, 129, 42);
       height: 6px;
-      transition: width 0.2s;
+      transition: width @stage-change-time ease;
       width: 0;
+    }
+
+  }
+  &.complete-0 {
+    ul li:nth-child(1) div {
+      .current-progress();
     }
 
   }
@@ -59,6 +87,9 @@
     ul li:nth-child(-n+1) div {
       .completed-progress();
     }
+    ul li:nth-child(2) div {
+      .current-progress();
+    }
 
   }
   &.complete-2 {
@@ -67,6 +98,9 @@
     }
     ul li:nth-child(-n+2) div {
       .completed-progress();
+    }
+    ul li:nth-child(3) div {
+      .current-progress();
     }
 
   }
@@ -91,7 +125,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    transition: opacity 0.2s;
+    transition: opacity @stage-change-time ease;
     opacity: 0;
     &.visible {
       opacity: 1;
