@@ -10,46 +10,64 @@ html
   
     meta(name='viewport', content='width=device-width, initial-scale=1')
   body
-    .container
-      h1  Generate Diary
-      .row
-        .col-md-3
-          select.yearSelect.form-control
-            option(value='2013') 2013/14
-            option(value='2014') 2014/15
-            option(value='2015') 2015/16
-            option(value='2016') 2016/17
-            option(value='2017') 2017/18
-      .row
-        .col-md-6
-          label(for='dateStart') Start of school
-          input#dateStart.form-control(type='text')
-        .col-md-6
-          label(for='dateStart') End of school
-          input#dateEnd.form-control(type='text')
-      .row
-        .col-md-6
-          h2 Calendar
-      .row
-        .col-md-8.col-md-offset-2
-          .table-responsive
-            table.table.table-hover
-              thead
-                tr
-                  th  Week
-                  th  Mon
-                  th  Tue
-                  th  Wed
-                  th  Thu
-                  th  Fri
-              tbody.calendar
-                tr
-                  td
-                  td
-                  td
-                  td
-                  td
-                  td
+    .progress-top.complete-0
+      ul
+        li
+          div
+            span 1. Year
+        li
+          div
+            span 2. Beginning and end
+        li
+          div
+            span 3. Dates and Quotes
+      .bar
+        .status
+          
+    .container#main
+      .row.stage.year.visible
+        h1  Generate Diary
+        .row
+          .col-md-3
+            select.yearSelect.form-control
+              option(value='2013') 2013/14
+              option(value='2014') 2014/15
+              option(value='2015') 2015/16
+              option(value='2016') 2016/17
+              option(value='2017') 2017/18
+      .row.stage.beginning
+        .row
+          .col-md-6
+            label(for='dateStart') Start of school
+            input#dateStart.form-control(type='text')
+          .col-md-6
+            label(for='dateStart') End of school
+            input#dateEnd.form-control(type='text')
+      
+      .row.stage.dates
+        .row
+          .col-md-6
+            h2 Calendar
+        .row
+          .col-md-8.col-md-offset-2
+            .table-responsive
+              table.table.table-hover
+                thead
+                  tr
+                    th  Week
+                    th  Mon
+                    th  Tue
+                    th  Wed
+                    th  Thu
+                    th  Fri
+                tbody.calendar
+                  tr
+                    td
+                    td
+                    td
+                    td
+                    td
+                    td
 
     script(src='modules/jquery/dist/jquery.min.js')
     script(src='modules/pickadate/lib/compressed/picker.js')

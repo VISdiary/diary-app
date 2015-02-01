@@ -1,5 +1,110 @@
+.progress-top {
+  height: 40px;
+  width: 100%;
+  margin-bottom: 40px;
+  ul {
+    width: 100%;
+    display: table;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    li {
+      width: 33.33%;
+      display: table-cell;
+      div {
+        border-left: 2px solid rgba(0, 0, 0, 0.30);
+        height: 100%;
+        text-align: center;
+        transition: background 0.2s;
+        background: rgba(151, 184, 85, 0.89);
+        span {
+          font-weight: bold;
+          text-shadow: 0 0 20px rgba(0,0,0,0.5);
+          color: #f0f0f0;
+          line-height: 45px;
+        }
+      }
+
+    }
+    li:first-child {
+      div {
+        border-left: 0;
+      }
+    }
+
+  }
+  .bar {
+    position: relative;
+    background: rgba(20, 161, 27, 0.45);
+    width: 100%;
+    height: 6px;
+    .status {
+      position: absolute;
+      background: rgb(42, 129, 42);
+      height: 6px;
+      transition: width 0.2s;
+      width: 0;
+    }
+
+  }
+  &.complete-1 {
+    .bar .status {
+      width: 33.5%;
+    }
+    ul li:nth-child(-n+1) div {
+      background: rgba(44, 153, 66, 0.89);
+    }
+
+  }
+  &.complete-2 {
+    .bar .status {
+      width: 66.8%;
+    }
+    ul li:nth-child(-n+2) div {
+      background: rgba(44, 153, 66, 0.89);
+    }
+
+  }
+  &.complete-3 {
+    .bar .status {
+      width: 100%;
+    }
+    ul li:nth-child(-n+3) div {
+      background: rgba(44, 153, 66, 0.89);
+    }
+  }
+
+}
 .row {
   margin-bottom: 20px;
+
+}
+#main {
+  position: relative;
+  .stage {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: opacity 0.2s;
+    opacity: 0;
+    &.visible {
+      opacity: 1;
+    }
+
+  }
+  .year {
+    
+
+  }
+  .beginning {
+    
+
+  }
+  .dates {
+    
+  }
+
 }
 .calendar tr td {
   div {
