@@ -26,15 +26,10 @@
       element: $(".progress-top"),
       stage: 0
     };
-    this.dates = {
-      start: new Date(),
-      end: new Date()
-    };
 
     this.Cal = new Calendar(2013);
 
     this.setupProgress();
-    this.setupYearPicker();
     this.setupDatePicker();
     this.setupCalendar();
 
@@ -61,8 +56,6 @@
     });
     $(".stage .back").click(function() {
       var index = $(".stage .back").index(this);
-
-
       self.changeToStage(index); // index is -1 based (first stage has no back button)
     });
   };
@@ -70,12 +63,23 @@
   EventHandler.prototype.checkStage = function(index) {
     switch (index) {
       case 0:
+        this.Cal.setYear($(".yearSelect").val());
+        this.refresh();
         return true;
       case 1:
+        var start = new Date($("#dateStart").pickadate().pickadate("picker").get());
+        var end = new Date($("#dateEnd").pickadate().pickadate("picker").get());
+
+
         var year = this.Cal.getYear();
-        if (this.dates.start < this.dates.end &&
-          this.dates.start.getFullYear() === year &&
-          this.dates.end.getFullYear() == year + 1) {
+        if (start < end &&
+          start.getFullYear() === year &&
+          end.getFullYear() == year + 1) {
+          this.Cal.setStartEndDates({
+            start: start,
+            end: end
+          });
+          this.refresh();
           return true;
         }
         return false;
@@ -100,42 +104,24 @@
 
   };
 
-  EventHandler.prototype.setupYearPicker = function() {
-    var self = this;
-    $(".yearSelect").on("change", function() {
-      self.Cal.setYear($(this).val())
-        .render();
-      self.refresh();
-    });
-  };
-
   EventHandler.prototype.setupDatePicker = function() {
     var self = this;
     var year = this.Cal.getYear();
 
     var opts = {
-      firstDay: 1,
-      min: new Date(year, 7, 1),
-      max: new Date(year + 1, 6, 31),
+      firstDay: true,
+      min: new Date(year, 7, 2), // includes 1
+      max: new Date(year + 1, 5, 31), // includes 30
       disable: [6, 7]
 
     };
-    var dateStart = $("#dateStart").pickadate();
-    var dateEnd = $("#dateEnd").pickadate();
+    var dateStart = $("#dateStart").pickadate(opts);
+    var dateEnd = $("#dateEnd").pickadate(opts);
 
-    dateStart.pickadate("set", opts);
-    dateEnd.pickadate("set", opts);
-
-    dateStart.pickadate("on", {
-      set: function(thing) {
-        self.setStartDate(new Date(thing.select));
-      }
-    });
-    dateEnd.pickadate("on", {
-      set: function(thing) {
-        self.setEndDate(new Date(thing.select));
-      }
-    });
+    //dateStart.pickadate("set", opts);
+    dateStart.pickadate("picker").set("view", new Date(year, 7));
+    //dateEnd.pickadate("set", opts);
+    dateEnd.pickadate("picker").set("view", new Date(year + 1, 5));
   };
   EventHandler.prototype.setupCalendar = function() {
 
@@ -144,14 +130,6 @@
   EventHandler.prototype.refresh = function() {
     this.setupDatePicker();
     this.setupCalendar();
-  };
-
-  EventHandler.prototype.setStartDate = function(date) {
-    this.dates.start = date;
-  };
-
-  EventHandler.prototype.setEndDate = function(date) {
-    this.dates.end = date;
   };
 
   // Holds school weeks
@@ -175,6 +153,7 @@
   function SchoolDay(date) {
       this.date = date;
       this.holiday = false;
+      this.disable = false;
       this.information = [];
     }
     // Is this day a holiday
@@ -196,13 +175,17 @@
     this.startYear = parseInt(year);
     this.calendar = ".calendar";
     this.weeks = [];
+    this.dates = {
+      start: new Date(),
+      end: new Date()
+    };
   }
 
   // Populate calendar with dates
   Calendar.prototype.populate = function() {
     var start = new Date(this.startYear, 7, 1, 12);
     var now = start;
-    var stop = new Date(this.startYear + 1, 6, 31, 12);
+    var stop = new Date(this.startYear + 1, 5, 31, 12);
     this.weeks = [];
     // Loop months
     while (now <= stop) {
@@ -213,6 +196,9 @@
         }
         if (now.getUTCDay() <= 5) {
           var day = new SchoolDay(now);
+          if (now < this.dates.start || now > this.dates.end - (-24 * 60 * 60 * 1000)) {
+            day.disable = true;
+          }
           week.days.push(day);
           now = Utils.addDay(now);
         } else {
@@ -237,6 +223,13 @@
 
   Calendar.prototype.getYear = function(year) {
     return this.startYear;
+  };
+
+  Calendar.prototype.setStartEndDates = function(dates) {
+    this.dates = dates;
+    this.populate();
+    this.render();
+    return this;
   };
 
   // Render the calendar table
@@ -264,7 +257,7 @@
             weekRow += "<td></td>";
           }
         }
-        weekRow += ("<td><div class='" + ((day.holiday) ? ("holiday ") : (" ")) + "' week='" + j + "' day='" + k + "'' >" + day.date.getDate() + "</div></td>");
+        weekRow += ("<td><div class='" + ((day.holiday) ? ("holiday ") : (" ")) + ((day.disable) ? ("disable ") : (" ")) + "' week='" + j + "' day='" + k + "'' >" + day.date.getDate() + "</div></td>");
       }
       weekRow += "</tr>";
       tbodyStr += weekRow;

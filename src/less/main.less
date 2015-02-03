@@ -1,7 +1,6 @@
 @stage-complete: rgba(44, 153, 66, 0.89);
 @stage-incomplete: rgba(151, 184, 85, 0.89);
 @stage-change-time: 0.3s;
-
 .completed-progress {
   background: @stage-complete;
   cursor: pointer;
@@ -9,12 +8,10 @@
     font-family: 'Glyphicons Halflings';
     content: " \e013";
     line-height: 40px;
-
   }
   &:hover {
     background: darken(@stage-complete, 5%);
   }
-
 }
 @keyframes progress-positoin {
   from {
@@ -23,7 +20,6 @@
   to {
     background: @stage-incomplete;
   }
-
 }
 @keyframes rotation {
   from {
@@ -32,11 +28,9 @@
   to {
     transform: rotate(360deg);
   }
-
 }
 .current-progress {
   animation: progress-positoin 1.5s ease infinite alternate;
-
   span:after {
     animation: rotation 3s linear infinite;
     transform-origin: 50% 49%;
@@ -46,7 +40,6 @@
     line-height: 40px;
     margin-left: 10px;
   }
-
 }
 .progress-top {
   height: 40px;
@@ -74,14 +67,12 @@
           line-height: 45px;
         }
       }
-
     }
     li:first-child {
       div {
         border-left: 0;
       }
     }
-
   }
   .bar {
     position: relative;
@@ -95,13 +86,11 @@
       transition: width @stage-change-time ease;
       width: 0;
     }
-
   }
   &.complete-0 {
     ul li:nth-child(1) div {
       .current-progress();
     }
-
   }
   &.complete-1 {
     .bar .status {
@@ -113,7 +102,6 @@
     ul li:nth-child(2) div {
       .current-progress();
     }
-
   }
   &.complete-2 {
     .bar .status {
@@ -125,7 +113,6 @@
     ul li:nth-child(3) div {
       .current-progress();
     }
-
   }
   &.complete-3 {
     .bar .status {
@@ -135,11 +122,9 @@
       .completed-progress();
     }
   }
-
 }
 .row {
   margin-bottom: 20px;
-
 }
 #main {
   position: relative;
@@ -159,19 +144,15 @@
       text-align: center;
       h2 {
         font-size: 40px;
-
       }
       p {
         font-size: 18px;
-
       }
       margin-bottom: 20px;
     }
-
   }
   .year {
     
-
   }
   .beginning {
     #dateStart,
@@ -179,12 +160,10 @@
       background-color: white;
       cursor: pointer;
     }
-
   }
   .dates {
     
   }
-
 }
 .calendar tr td {
   div {
@@ -194,9 +173,11 @@
     font-style: italic;
     border-radius: 5px;
     cursor: pointer;
-
     &.holiday {
       background: #5b9ce5;
+    }
+    &.disable {
+      background: #a5a5a5;
     }
   }
 }
